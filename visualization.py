@@ -32,6 +32,7 @@ class Visualization:
                 checked_vertices.append(vertex)
         except StopIteration as e:
             path, cost = e.value
+            print(path, cost)
             self.__redraw(graph, checked_vertices, path, None)
             pygame.time.wait(1000)
 

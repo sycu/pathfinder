@@ -24,3 +24,8 @@ class Random(AbstractHeuristic):
 
     def calculate(self, vertex: Vertex, target: Vertex) -> float:
         return randint(0, self.limit)
+
+
+class Zero(AbstractHeuristic):
+    def calculate(self, vertex: Vertex, target: Vertex) -> float:
+        return 0

@@ -1,7 +1,7 @@
 from algorithms import AStar, Dijkstra
 from creators.matrix_creator import MatrixCreator
 from graph import MatrixBuilder
-from heuristics import Euclidean, Manhattan, Random
+from heuristics import Euclidean, Manhattan, Random, Zero
 from visualization import Visualization
 
 
@@ -25,8 +25,9 @@ if __name__ == '__main__':
     euclidean_heuristic = Euclidean()
     manhattan_heuristic = Manhattan()
     random_heuristic = Random(25)
+    zero_heuristic = Zero()
 
-    a_star = AStar(random_heuristic)
+    a_star = AStar(zero_heuristic)
     dijkstra = Dijkstra()
 
     builder = MatrixBuilder()
