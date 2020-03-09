@@ -5,7 +5,7 @@ from heuristics import Euclidean, Manhattan, Zero
 from visualization import Visualization
 
 if __name__ == '__main__':
-    creator = MatrixCreator((800, 600), (25, 10))
+    creator = MatrixCreator((800, 600), (40, 30))
     matrix, start, end = creator.run()
 
     euclidean_heuristic = Euclidean()
@@ -19,6 +19,17 @@ if __name__ == '__main__':
     dijkstra = Dijkstra()
 
     builder = MatrixBuilder()
+    graph = builder.build(matrix)
 
-    visualization = Visualization((800, 600), (25, 10))
-    visualization.visualize(bi_a_star, builder.build(matrix), start, end)
+    algos = [
+        a_star,
+        best_first,
+        bi_a_star,
+        breadth_first,
+        dijkstra
+    ]
+
+    visualization = Visualization((800, 600), (40, 30))
+
+    for algo in algos:
+        visualization.visualize(algo, graph, start, end)

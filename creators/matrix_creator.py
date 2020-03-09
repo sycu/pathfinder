@@ -37,7 +37,7 @@ class MatrixCreator:
                     row = y // (self.window.get_height() // self.board_size[1])
 
                     if button == 1 or button == 3:
-                        diff = 1 if button == 1 else -1
+                        diff = 2 if button == 1 else -2
                         matrix[row][col] += diff
 
                         if matrix[row][col] < -1:
