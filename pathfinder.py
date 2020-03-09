@@ -1,4 +1,4 @@
-from algorithms import AStar, Dijkstra
+from algorithms import AStar, BestFirstSearch, Dijkstra
 from creators.matrix_creator import MatrixCreator
 from graph import MatrixBuilder
 from heuristics import Euclidean, Manhattan, Random, Zero
@@ -28,9 +28,10 @@ if __name__ == '__main__':
     zero_heuristic = Zero()
 
     a_star = AStar(zero_heuristic)
+    best_first_search = BestFirstSearch()
     dijkstra = Dijkstra()
 
     builder = MatrixBuilder()
 
     visualization = Visualization((800, 600), (25, 10))
-    visualization.visualize(a_star, builder.build(matrix), start, end)
+    visualization.visualize(best_first_search, builder.build(matrix), start, end)
