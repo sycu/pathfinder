@@ -1,6 +1,6 @@
 from graph import Graph, Vertex
 from heuristics import AbstractHeuristic
-from typing import Generator, List, Tuple
+from typing import Dict, Generator, List, Tuple
 from .algorithm import Algorithm
 
 
@@ -20,7 +20,7 @@ class AStar(Algorithm):
             sources[vertex] = None
 
         distances[source] = 0.0
-        scores[source] = 0.0
+        scores[source] = self._calculate_score(distances, source, target)
 
         while queue:
             vertex = min(queue, key=scores.get)
@@ -36,8 +36,11 @@ class AStar(Algorithm):
                 if tentative_g_score < distances[edge_target]:
                     sources[edge_target] = vertex
                     distances[edge_target] = tentative_g_score
-                    scores[edge_target] = distances[edge_target] + self.heuristic.calculate(edge_target, target)
+                    scores[edge_target] = self._calculate_score(distances, edge_target, target)
                     if edge_target not in queue:
                         queue.add(edge_target)
 
         return self._build_path(sources, source, target), distances[target]
+
+    def _calculate_score(self, distances: Dict[Vertex, float], vertex: Vertex, target: Vertex) -> float:
+        return distances[vertex] + self.heuristic.calculate(vertex, target)
