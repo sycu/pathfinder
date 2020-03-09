@@ -1,4 +1,4 @@
-from algorithms import AStar, BestFirst, BreadthFirst, Dijkstra
+from algorithms import AStar, BestFirst, BiAStar, BreadthFirst, Dijkstra
 from creators.matrix_creator import MatrixCreator
 from graph import MatrixBuilder
 from heuristics import Euclidean, Manhattan, Zero
@@ -14,10 +14,11 @@ if __name__ == '__main__':
 
     a_star = AStar(manhattan_heuristic)
     best_first = BestFirst(manhattan_heuristic)
+    bi_a_star = BiAStar(zero_heuristic)
     breadth_first = BreadthFirst()
     dijkstra = Dijkstra()
 
     builder = MatrixBuilder()
 
     visualization = Visualization((800, 600), (25, 10))
-    visualization.visualize(a_star, builder.build(matrix), start, end)
+    visualization.visualize(bi_a_star, builder.build(matrix), start, end)
