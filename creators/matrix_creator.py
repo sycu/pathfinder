@@ -1,7 +1,7 @@
 import pygame
 
-from graph import Matrix
-from typing import Tuple
+from graph import Matrix, Vertex
+from typing import Optional, Tuple
 
 
 class MatrixCreator:
@@ -14,15 +14,15 @@ class MatrixCreator:
         self.window = pygame.display.set_mode(window_size)
         pygame.display.set_caption('Pathfinder Creator')
 
-    def run(self) -> Tuple[Matrix, Tuple[int, int], Tuple[int, int]]:
+    def run(self, matrix: Optional[Matrix], source: Vertex, target: Vertex) -> Tuple[Matrix, Vertex, Vertex]:
         clock = pygame.time.Clock()
-        matrix = [[1 for x in range(self.board_size[0])] for y in range(self.board_size[1])]
 
-        place_start = True
-        start = (0, 0)
-        end = (self.board_size[0] - 1, self.board_size[1] - 1)
+        if not matrix:
+            matrix = [[1 for x in range(self.board_size[0])] for y in range(self.board_size[1])]
 
-        self.__redraw(matrix, start, end)
+        place_source = True
+
+        self.__redraw(matrix, source, target)
 
         run = True
         while run:
@@ -45,19 +45,18 @@ class MatrixCreator:
                         elif matrix[row][col] > 10:
                             matrix[row][col] = 10
                     elif button == 2:
-                        if place_start:
-                            start = (col, row)
+                        if place_source:
+                            source = (col, row)
                         else:
-                            end = (col, row)
-                        place_start = not place_start
+                            target = (col, row)
+                        place_source = not place_source
 
-                    self.__redraw(matrix, start, end)
+                    self.__redraw(matrix, source, target)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        return matrix, start, end
+                        return matrix, source, target
 
-
-    def __redraw(self, matrix: Matrix, start: Tuple[int, int], end: Tuple[int, int]):
+    def __redraw(self, matrix: Matrix, source: Tuple[int, int], target: Tuple[int, int]):
         self.window.fill(self.BACKGROUND_COLOR)
         height = self.window.get_height()
         width = self.window.get_width()
@@ -73,9 +72,9 @@ class MatrixCreator:
                 cost_color = 255 - 25 * cost if cost > -1 else 0
                 color = (cost_color, cost_color, cost_color)
 
-                if (x, y) == start:
+                if (x, y) == source:
                     color = (0, 255, 0)
-                elif (x, y) == end:
+                elif (x, y) == target:
                     color = (255, 0, 0)
 
                 pygame.draw.rect(self.window, color, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))

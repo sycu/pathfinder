@@ -19,7 +19,7 @@ class Visualization:
         self.window = pygame.display.set_mode(window_size)
         pygame.display.set_caption('Pathfinder')
 
-    def visualize(self, algorithm: Algorithm, graph: Graph, source: Vertex, target: Vertex) -> None:
+    def visualize(self, algorithm: Algorithm, graph: Graph, source: Vertex, target: Vertex) -> Tuple[List[Vertex], float]:
         clock = pygame.time.Clock()
         generator = algorithm.solve(graph, source, target)
         checked_vertices = []
@@ -32,9 +32,10 @@ class Visualization:
                 checked_vertices.append(vertex)
         except StopIteration as e:
             path, cost = e.value
-            print(path, cost)
             self.__redraw(graph, checked_vertices, path, None)
             pygame.time.wait(1000)
+
+        return path, cost
 
     def __redraw(self, graph: Graph, checked_vertices: List[Vertex], path: List[Vertex], active_vertex: Optional[Vertex]):
         self.window.fill(self.BACKGROUND_COLOR)
