@@ -54,16 +54,16 @@ class Visualization:
         for vertex in graph.vertices:
             cost = graph.costs[vertex]
 
-            if vertex == active_vertex:
-                color = self.VERTEX_ACTIVE_COLOR
-            elif vertex in path:
-                color = self.VERTEX_PATH_COLOR
-            elif vertex in checked_vertices:
-                color = self.VERTEX_CHECKED_COLOR
-            elif vertex == source:
+            if vertex == source:
                 color = self.SOURCE_COLOR
             elif vertex == target:
                 color = self.TARGET_COLOR
+            elif vertex in path:
+                color = self.VERTEX_PATH_COLOR
+            elif vertex == active_vertex:
+                color = self.VERTEX_ACTIVE_COLOR
+            elif vertex in checked_vertices:
+                color = self.VERTEX_CHECKED_COLOR
             elif cost < 0:
                 color = self.WALL_COLOR
             else:
