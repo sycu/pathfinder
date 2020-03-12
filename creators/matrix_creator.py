@@ -2,10 +2,15 @@ import pygame
 
 from graph import Matrix, Vertex
 from typing import Optional, Tuple
+from visualization import Visualization
 
 
 class MatrixCreator:
-    BACKGROUND_COLOR = (255, 255, 255)
+    BACKGROUND_COLOR = Visualization.BACKGROUND_COLOR
+    SOURCE_COLOR = Visualization.SOURCE_COLOR
+    TARGET_COLOR = Visualization.TARGET_COLOR
+    VERTEX_COLOR = Visualization.VERTEX_COLOR
+    WALL_COLOR = Visualization.WALL_COLOR
 
     def __init__(self, window_size: Tuple[int, int], board_size: Tuple[int, int]):
         self.board_size = board_size
@@ -69,13 +74,15 @@ class MatrixCreator:
         for y in range(rows):
             for x in range(cols):
                 cost = matrix[y][x]
-                cost_color = 255 - 25 * cost if cost > -1 else 0
-                color = (cost_color, cost_color, cost_color)
 
                 if (x, y) == source:
-                    color = (0, 255, 0)
+                    color = self.SOURCE_COLOR
                 elif (x, y) == target:
-                    color = (255, 0, 0)
+                    color = self.TARGET_COLOR
+                elif cost < 0:
+                    color = self.WALL_COLOR
+                else:
+                    color = tuple(hue * (1 - cost / 10) for hue in self.VERTEX_COLOR)
 
                 pygame.draw.rect(self.window, color, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))
 

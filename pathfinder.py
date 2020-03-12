@@ -1,3 +1,4 @@
+import os
 import pickle
 import sys
 
@@ -9,27 +10,27 @@ from typing import Optional, Tuple
 from visualization import Visualization
 
 
-def load_matrix(path: str) -> Optional[Tuple[Tuple[int, int], Matrix, Vertex, Vertex]]:
-    with open(path, 'rb') as file:
+def load_matrix(name: str) -> Optional[Tuple[Tuple[int, int], Matrix, Vertex, Vertex]]:
+    with open(os.path.join('graphs_data', '%s.graph' % name), 'rb') as file:
         return pickle.load(file)
 
 
-def save_matrix(path: str, board_size: Tuple[int, int], matrix: Matrix, source: Vertex, target: Vertex) -> None:
-    with open(path, 'wb') as file:
+def save_matrix(name: str, board_size: Tuple[int, int], matrix: Matrix, source: Vertex, target: Vertex) -> None:
+    with open(os.path.join('graphs_data', '%s.graph' % name), 'wb') as file:
         pickle.dump((board_size, matrix, source, target), file, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__ == '__main__':
     if len(sys.argv) != 4:
         print('Usage:')
-        print('python pathfinder.py [matrix_file] [cols] [rows]')
+        print('python pathfinder.py [matrix_name] [cols] [rows]')
         exit(1)
 
-    matrix_file = sys.argv[1]
+    matrix_name = sys.argv[1]
     board_size = (int(sys.argv[2]), int(sys.argv[3]))
 
     try:
-        board_size, matrix, source, target = load_matrix(matrix_file)
+        board_size, matrix, source, target = load_matrix(matrix_name)
     except FileNotFoundError:
         matrix = None
         source = (0, 0)
@@ -61,7 +62,7 @@ if __name__ == '__main__':
 
     visualization = Visualization((800, 600), board_size)
 
-    save_matrix(matrix_file, board_size, matrix, source, target)
+    save_matrix(matrix_name, board_size, matrix, source, target)
 
     for name, algorithm in algorithms.items():
         path, cost = visualization.visualize(algorithm, graph, source, target)
