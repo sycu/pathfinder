@@ -21,35 +21,30 @@ class Visualization:
 
         pygame.init()
         self.window = pygame.display.set_mode(window_size)
-        pygame.display.set_caption('Pathfinder')
+        pygame.display.set_caption('Pathfinder Visualization')
 
     def visualize(self, algorithm: Algorithm, graph: Graph, source: Vertex, target: Vertex) -> Tuple[List[Vertex], float]:
         clock = pygame.time.Clock()
+        self.__draw_board(graph, source, target)
+        previous_vertex = None
         generator = algorithm.solve(graph, source, target)
-        checked_vertices = []
 
         try:
             while True:
-                clock.tick(30)
+                clock.tick(60)
                 vertex = next(generator)
-                self.__redraw(graph, source, target, checked_vertices, [], vertex)
-                checked_vertices.append(vertex)
+                self.__draw_active_vertex(vertex, previous_vertex)
+                previous_vertex = vertex
         except StopIteration as e:
             path, cost = e.value
-            self.__redraw(graph, source, target, checked_vertices, path, None)
+            self.__draw_path(path)
             pygame.time.wait(1000)
 
         return path, cost
 
-    def __redraw(self, graph: Graph, source: Vertex, target: Vertex, checked_vertices: List[Vertex], path: List[Vertex], active_vertex: Optional[Vertex]):
+    def __draw_board(self, graph: Graph, source: Vertex, target: Vertex):
+        field_width, field_height = self.__get_field_size()
         self.window.fill(self.BACKGROUND_COLOR)
-        height = self.window.get_height()
-        width = self.window.get_width()
-
-        cols, rows = self.board_size
-
-        field_width = width // cols
-        field_height = height // rows
 
         for vertex in graph.vertices:
             cost = graph.costs[vertex]
@@ -58,12 +53,6 @@ class Visualization:
                 color = self.SOURCE_COLOR
             elif vertex == target:
                 color = self.TARGET_COLOR
-            elif vertex in path:
-                color = self.VERTEX_PATH_COLOR
-            elif vertex == active_vertex:
-                color = self.VERTEX_ACTIVE_COLOR
-            elif vertex in checked_vertices:
-                color = self.VERTEX_CHECKED_COLOR
             elif cost < 0:
                 color = self.WALL_COLOR
             else:
@@ -73,3 +62,30 @@ class Visualization:
             pygame.draw.rect(self.window, color, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))
 
         pygame.display.update()
+
+    def __draw_active_vertex(self, vertex: Vertex, previous_vertex: Optional[Vertex]):
+        field_width, field_height = self.__get_field_size()
+
+        if previous_vertex:
+            x, y = previous_vertex
+            pygame.draw.rect(self.window, self.VERTEX_CHECKED_COLOR, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))
+
+        x, y = vertex
+        pygame.draw.rect(self.window, self.VERTEX_ACTIVE_COLOR, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))
+
+        pygame.display.update()
+
+    def __draw_path(self, path: List[Vertex]):
+        field_width, field_height = self.__get_field_size()
+
+        for vertex in path:
+            x, y = vertex
+            pygame.draw.rect(self.window, self.VERTEX_PATH_COLOR, (x * field_width + 1, y * field_height + 1, field_width - 2, field_height - 2))
+
+        pygame.display.update()
+
+    def __get_field_size(self) -> Tuple[int, int]:
+        height = self.window.get_height()
+        width = self.window.get_width()
+        cols, rows = self.board_size
+        return width // cols, height // cols

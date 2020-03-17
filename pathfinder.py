@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     a_star = AStar(manhattan_heuristic)
     best_first = BestFirst(manhattan_heuristic)
-    bi_a_star = BiAStar(zero_heuristic)
+    bi_a_star = BiAStar(manhattan_heuristic)
     breadth_first = BreadthFirst()
     dijkstra = Dijkstra()
 
